@@ -83,8 +83,7 @@
 import { onMounted, onUnmounted } from "vue";
 import Loading from "~/components/Loading.vue";
 import { useRanking } from "~/composables/rank/rankingList";
-import { registerShortcut } from "~/utils/keyboardShortcuts";
-import { cancelShortcut } from "../../utils/keyboardShortcuts";
+import { cancelShortcut, registerShortcut } from "~/utils/keyboardShortcuts";
 import RankingItem from "./RankingItem.vue";
 import RankingTip from "./RankingTip.vue";
 

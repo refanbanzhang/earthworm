@@ -7,7 +7,9 @@ import {
   type RankingSelfType,
 } from "~/api/rank";
 import Message from "~/components/main/Message/useMessage";
+import { useLoading } from "~/composables/useLoading";
 
+// 缓存到内存中，避免切换的时候，再次发起请求，因为这个数据的时效性不高
 function cacheRanking() {
   let rankingCache: Record<string, ProgressRankVo> = {};
 
@@ -43,7 +45,8 @@ export const useRanking = defineStore("ranking", () => {
     cleanRankingCache,
   } = cacheRanking();
 
-  const isLoading = ref(false);
+  const { isLoading, showLoading, hideLoading } = useLoading();
+  const rankModal = ref(false); // 需要作用于不同页面
   const currentPeriod = ref<string>("weekly");
   const rankingList = ref<RankingItemType[]>([]);
   const rankingSelf = ref<RankingSelfType | null>(null);
@@ -62,28 +65,22 @@ export const useRanking = defineStore("ranking", () => {
     },
   ];
 
-  watch(currentPeriod, async () => {
+  async function fetchData() {
+    let res: ProgressRankVo | null = null;
+
     if (hasRankingCache(currentPeriod.value)) {
-      updateRankingList(getRankingCache(currentPeriod.value));
-      return;
+      res = getRankingCache(currentPeriod.value);
+    } else {
+      showLoading();
+      res = await fetchProgressRank(currentPeriod.value);
+      hideLoading();
     }
 
-    const res = await fetchRankingList();
-    updateRankingList(res);
-    saveRankingCache(currentPeriod.value, res);
-  });
-
-  function updateRankingList(res: ProgressRankVo) {
-    rankingList.value = res.list;
-    rankingSelf.value = res.self;
-  }
-
-  function showLoading() {
-    isLoading.value = true;
-  }
-
-  function hideLoading() {
-    isLoading.value = false;
+    if (res) {
+      rankingList.value = res.list;
+      rankingSelf.value = res.self;
+      saveRankingCache(currentPeriod.value, res);
+    }
   }
 
   function togglePeriod(period: string) {
@@ -100,28 +97,19 @@ export const useRanking = defineStore("ranking", () => {
     currentPeriod.value = period;
   }
 
-  async function fetchRankingList() {
-    showLoading();
-    const res = await fetchProgressRank(currentPeriod.value);
-    hideLoading();
-
-    return res;
-  }
-
-  const rankModal = ref(false); // 需要作用于不同页面
-
   async function showRankModal() {
     rankModal.value = true;
     cleanRankingCache();
 
-    const res = await fetchRankingList();
-    updateRankingList(res);
-    saveRankingCache(currentPeriod.value, res);
+    fetchData();
   }
 
   function hideRankModal() {
     rankModal.value = false;
   }
+
+  // 切换视图类型的时候触发
+  watch(currentPeriod, fetchData);
 
   return {
     rankModal,
