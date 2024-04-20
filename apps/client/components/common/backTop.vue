@@ -26,7 +26,6 @@ const scrollToTop = () => {
       top: 0,
       behavior: "smooth",
     });
-    return;
   } else {
     window.location.href = "/";
   }

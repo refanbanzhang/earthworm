@@ -33,7 +33,7 @@
       class="my-10 flex flex-wrap justify-center gap-4 font-customFont items-center"
     >
       <button
-        @click="handleKeydown"
+        @click="handleClick"
         class="btn"
         type="button"
       >
@@ -65,7 +65,7 @@
 <script setup lang="ts">
 const emit = defineEmits(["startEarthworm"]);
 
-function handleKeydown() {
+function handleClick() {
   emit("startEarthworm");
 }
 </script>
