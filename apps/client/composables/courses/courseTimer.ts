@@ -1,8 +1,11 @@
 // CourseTimer.js
+type Milliseconds = number;
+type Seconds = number;
+
 type Timestamp = {
-  s: number;
-  e: number;
-  time: number;
+  start : Milliseconds;
+  end : Milliseconds;
+  duration: Seconds;
 };
 
 type Timestamps = Record<string, Timestamp>;
@@ -13,25 +16,25 @@ function time(label: string) {
   if (timestamps[label]) return;
 
   timestamps[label] = {
-    s: Date.now(),
-    e: 0,
-    time: 0,
+    start : Date.now(),
+    end : 0,
+    duration: 0,
   };
 }
 
 function timeEnd(label: string) {
-  const start = timestamps[label].s;
+  const start = timestamps[label].start ;
   const end = Date.now();
-  const time = (Date.now() - start) / 1000;
+  const duration = (Date.now() - start) / 1000;
 
-  timestamps[label].e = end;
-  timestamps[label].time = time;
+  timestamps[label].end  = end;
+  timestamps[label].duration = duration;
 }
 
 function calculateTotalTime() {
   const totalTime = Object.keys(timestamps).reduce((totalTime, key) => {
-    const { time } = timestamps[key];
-    return (totalTime += time);
+    const { duration } = timestamps[key];
+    return (totalTime += duration);
   }, 0);
 
   return Math.ceil(totalTime);
