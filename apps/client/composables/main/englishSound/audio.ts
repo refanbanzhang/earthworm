@@ -12,7 +12,6 @@ export interface PlayOptions {
   interval?: number;
 }
 
-
 const DefaultPlayOptions = {
   times: 1,
   rate: 1,
@@ -20,6 +19,8 @@ const DefaultPlayOptions = {
 };
 
 export function play(playOptions?: PlayOptions) {
+  let count = 1;
+  let timeoutId: NodeJS.Timeout;
   const { times, rate, interval } = Object.assign(
     {},
     DefaultPlayOptions,
@@ -27,24 +28,21 @@ export function play(playOptions?: PlayOptions) {
   );
 
   audio.playbackRate = rate;
-  audio.play();
-  if (times > 1) {
-    audio.addEventListener("ended", handleEnded, false);
+
+  const handleEnded = () => {
+    count++;
+
+    if (count < times) {
+      timeoutId = setTimeout(() => {
+        audio.play();
+      }, interval);
+    } else {
+      audio.removeEventListener("ended", handleEnded);
+    }
   }
 
-  let index = 1;
-  let timeoutId: NodeJS.Timeout;
-  function handleEnded() {
-    timeoutId = setTimeout(() => {
-      if (index < times) {
-        audio.play();
-        index++;
-      } else {
-        index = 1;
-        audio.removeEventListener("ended", handleEnded);
-      }
-    }, interval);
-  }
+  audio.addEventListener("ended", handleEnded, false);
+  audio.play();
 
   return () => {
     audio.pause()
