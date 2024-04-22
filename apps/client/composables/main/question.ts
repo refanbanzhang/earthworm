@@ -71,14 +71,12 @@ export function useInput({
       resetUserInputWords();
 
       const english = source();
-      english
+
+      const userInputWords = english
         .split(separator)
         .map(createWord)
-        .forEach((word, i) => {
-          userInputWords[i] = word;
-          // 首个单词自动聚焦
-          i === 0 && (userInputWords[0].isActive = true);
-        });
+
+      userInputWords[0].isActive = true
     });
   }
 
