@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 
+// 定义枚举
 export enum SHORTCUT_KEY_TYPES {
   SOUND = "sound",
   ANSWER = "answer",
