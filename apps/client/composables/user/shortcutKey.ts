@@ -63,6 +63,7 @@ export function useShortcutKeyMode() {
   // 初始化快捷键
   setShortcutKeys();
 
+  // 没看懂，需要继续看
   function setShortcutKeys() {
     const localKeys = localStorage.getItem(SHORTCUT_KEYS);
     if (localKeys) {
