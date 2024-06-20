@@ -66,9 +66,11 @@ export function useShortcutKeyMode() {
   // 没看懂，需要继续看
   function setShortcutKeys() {
     const localKeys = localStorage.getItem(SHORTCUT_KEYS);
+    // 如果读取到数据，则存储到shortcutKeys中
     if (localKeys) {
       shortcutKeys.value = { ...shortcutKeys.value, ...JSON.parse(localKeys) };
     } else {
+      // 如则更新localStorage
       localStorage.setItem(SHORTCUT_KEYS, JSON.stringify(shortcutKeys.value));
     }
   }
