@@ -39,6 +39,7 @@ export const SPECIAL_KEYS = new Map([
 // Meta → Command
 // 其他键照旧返回
 export function convertMacKey(key: string) {
+  // 只处理指定的key
   return (
     {
       [KEYBOARD.CONTROL]: KEYBOARD.CTRL,
