@@ -64,14 +64,14 @@ export function useShortcutKeyMode() {
   // 初始化快捷键
   setShortcutKeys();
 
-  // 没看懂，需要继续看
+  // 如果本地存储中读到数据则放到内存中，否则保存到本地存储中
   function setShortcutKeys() {
     const localKeys = localStorage.getItem(SHORTCUT_KEYS);
     // 如果读取到数据，则存储到shortcutKeys中
     if (localKeys) {
       shortcutKeys.value = { ...shortcutKeys.value, ...JSON.parse(localKeys) };
     } else {
-      // 如则更新localStorage
+      // 否则更新localStorage
       localStorage.setItem(SHORTCUT_KEYS, JSON.stringify(shortcutKeys.value));
     }
   }
