@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", () => {
   function initUser(userInfoResponse: UserInfoResponse) {
     userInfo.value = userInfoResponse;
   }
+
   async function updateUserInfo(userInfo: Partial<UserInfoResponse>) {
     const res = await updateUserinfo(userInfo);
     initUser(res!.data as UserInfoResponse);
