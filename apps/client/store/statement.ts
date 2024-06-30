@@ -15,6 +15,7 @@ let isSaveStatement = true;
 const statementIndex = ref(0);
 
 export function useStatement() {
+  // 参数course的类型为ref，需要用Ref标记
   function setupStatement(course: Ref<Course | undefined>) {
     statementIndex.value = course.value!.statementIndex || 0;
 
